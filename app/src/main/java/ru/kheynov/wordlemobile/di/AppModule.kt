@@ -1,3 +1,5 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
 package ru.kheynov.wordlemobile.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
