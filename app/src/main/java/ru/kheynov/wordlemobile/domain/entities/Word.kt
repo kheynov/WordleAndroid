@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class Word(
     @SerialName("lang") val language: String,
     val word: String,
-    val timeToNext: TimeRemainingDTO,
+    val timeToNext: Int,
 )
