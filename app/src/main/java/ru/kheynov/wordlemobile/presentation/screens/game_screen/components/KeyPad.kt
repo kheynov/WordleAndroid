@@ -42,15 +42,16 @@ fun KeyPad(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(4.dp))
-            .background(KeyboardColors[state ?: LetterState.NOT_USED]!!)
-            .padding(horizontal = 4.dp, vertical = 16.dp)
             .clickable {
                 when (key) {
                     is Key.Erase -> onClick(Key.Erase)
                     is Key.Enter -> onClick(Key.Enter)
                     is Key.Letter -> onClick(key)
                 }
-            },
+            }
+            .background(KeyboardColors(isSystemInDarkTheme()).getColor(state ?: LetterState
+                .NOT_USED)!!)
+            .padding(horizontal = 4.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         when (key) {
@@ -96,7 +97,7 @@ fun KeyPadPreview() {
                 verticalAlignment = Alignment.CenterVertically) {
                 KeyPad(
                     modifier = Modifier,
-                    key = Key.Enter,
+                    key = Key.Letter('d'),
                     state = LetterState.CORRECT,
                 )
             }

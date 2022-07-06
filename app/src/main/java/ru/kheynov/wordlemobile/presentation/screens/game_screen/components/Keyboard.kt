@@ -23,7 +23,7 @@ import ru.kheynov.wordlemobile.presentation.util.LetterState
 
 @Composable
 fun Keyboard(
-    state: Map<Char, LetterState>,
+    state: Map<Char, LetterState>? = null,
     layout: List<List<Key>> = KeyboardLayout.Russian,
     onErase: () -> Unit = {},
     onEnter: () -> Unit = {},
@@ -41,7 +41,7 @@ fun Keyboard(
                             .weight(1f)
                             .padding(horizontal = 3.dp),
                         key = key,
-                        state = state[(key as Key.Letter).char] ?: LetterState.NOT_USED,
+                        state = state?.get((key as Key.Letter).char) ?: LetterState.NOT_USED,
                         onClick = { letter ->
                             onLetterClick((letter as Key.Letter).char)
                         },
@@ -56,7 +56,7 @@ fun Keyboard(
                             .weight(1f)
                             .padding(horizontal = 3.dp),
                         key = key,
-                        state = state[(key as Key.Letter).char] ?: LetterState.NOT_USED,
+                        state = state?.get((key as Key.Letter).char) ?: LetterState.NOT_USED,
                         onClick = { letter ->
                             onLetterClick((letter as Key.Letter).char)
                         },
@@ -72,7 +72,7 @@ fun Keyboard(
                                 .weight(1f)
                                 .padding(horizontal = 3.dp),
                             key = key,
-                            state = state[key.char] ?: LetterState.NOT_USED,
+                            state = state?.get(key.char) ?: LetterState.NOT_USED,
                             onClick = { letter ->
                                 onLetterClick((letter as Key.Letter).char)
                             },
