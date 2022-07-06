@@ -1,13 +1,17 @@
 package ru.kheynov.wordlemobile.presentation.screens.game_screen.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,32 +27,65 @@ fun Keyboard(
     layout: List<List<Key>> = KeyboardLayout.Russian,
     onErase: () -> Unit = {},
     onEnter: () -> Unit = {},
-    onLetterClick: () -> Unit = {},
+    onLetterClick: (Char) -> Unit = {},
 ) {
     Box(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
-        .padding(bottom = 4.dp)
+        .padding(4.dp)
     ) {
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceEvenly) {
-            LazyRow(Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly) {
-                items(layout[0]) { key ->
-                    KeyPad(key = key,
-                        state = state[(key as Key.Letter).char] ?: LetterState.NOT_USED)
+        Column(Modifier.fillMaxWidth()) {
+            Row(horizontalArrangement = Arrangement.Center) {
+                for (key in layout[0]) {
+                    KeyPad(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 3.dp),
+                        key = key,
+                        state = state[(key as Key.Letter).char] ?: LetterState.NOT_USED,
+                        onClick = { letter ->
+                            onLetterClick((letter as Key.Letter).char)
+                        },
+                    )
                 }
             }
-            LazyRow(Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly) {
-                items(layout[1]) { key ->
-                    KeyPad(key = key,
-                        state = state[(key as Key.Letter).char] ?: LetterState.NOT_USED)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.Center) {
+                for (key in layout[1]) {
+                    KeyPad(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 3.dp),
+                        key = key,
+                        state = state[(key as Key.Letter).char] ?: LetterState.NOT_USED,
+                        onClick = { letter ->
+                            onLetterClick((letter as Key.Letter).char)
+                        },
+                    )
                 }
             }
-            LazyRow(Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly) {
-                items(layout[2]) { key ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.Center) {
+                for (key in layout[2]) {
                     when (key) {
-                        is Key.Letter -> KeyPad(key = key,
-                            state = state[key.char] ?: LetterState.NOT_USED)
-                        else -> KeyPad(key = key)
+                        is Key.Letter -> KeyPad(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 3.dp),
+                            key = key,
+                            state = state[key.char] ?: LetterState.NOT_USED,
+                            onClick = { letter ->
+                                onLetterClick((letter as Key.Letter).char)
+                            },
+                        )
+                        else -> KeyPad(modifier = Modifier
+                            .weight(1.7f)
+                            .padding(horizontal = 3.dp),
+                            key = key,
+                            onClick = {
+                                if (it is Key.Erase) onErase()
+                                else onEnter()
+                            }
+                        )
                     }
                 }
             }
@@ -57,11 +94,17 @@ fun Keyboard(
 }
 
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark")
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Light")
 @Composable
 fun KeyboardPreview() {
     WordleMobileTheme {
-        Keyboard(state = mapOf('ы' to LetterState.CORRECT))
+        Surface(modifier = Modifier.background(MaterialTheme.colors.background)) {
+            Keyboard(state = mapOf(
+                'ы' to LetterState.CORRECT,
+                'а' to LetterState.CONTAINED,
+                'л' to LetterState.MISS
+            ))
+        }
     }
 }

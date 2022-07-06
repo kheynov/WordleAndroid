@@ -9,7 +9,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -35,29 +34,27 @@ import ru.kheynov.wordlemobile.presentation.util.LetterState
 
 @Composable
 fun KeyPad(
+    modifier: Modifier = Modifier,
     state: LetterState? = null,
     key: Key,
-    onClick: (Char) -> Unit = {},
-    onErase: () -> Unit = {},
-    onEnter: () -> Unit = {},
+    onClick: (Key) -> Unit = {},
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(2.dp))
+        modifier = modifier
+            .clip(RoundedCornerShape(4.dp))
             .background(KeyboardColors[state ?: LetterState.NOT_USED]!!)
-            .padding(horizontal = 4.dp, vertical = 8.dp)
+            .padding(horizontal = 4.dp, vertical = 16.dp)
             .clickable {
                 when (key) {
-                    is Key.Erase -> onErase()
-                    is Key.Enter -> onEnter()
-                    is Key.Letter -> onClick(key.char)
+                    is Key.Erase -> onClick(Key.Erase)
+                    is Key.Enter -> onClick(Key.Enter)
+                    is Key.Letter -> onClick(key)
                 }
             },
         contentAlignment = Alignment.Center
     ) {
-        if (key is Key.Erase) {
-            Image(painter = painterResource(id = R.drawable.ic_backspace),
+        when (key) {
+            is Key.Erase -> Image(painter = painterResource(id = R.drawable.ic_backspace),
                 contentDescription = "Keypad " +
                         "picture",
                 colorFilter =
@@ -66,17 +63,24 @@ fun KeyPad(
                 else
                     null
             )
-        } else {
-            Text(
+            is Key.Enter -> Image(painter = painterResource(id = R.drawable.ic_arrow),
+                contentDescription = "Keypad " +
+                        "picture",
+                colorFilter =
+                if (!isSystemInDarkTheme())
+                    ColorFilter.tint(LightKeyPadTextColor)
+                else
+                    null
+            )
+            else -> Text(
                 text = if (key is Key.Enter) "Ввод" else (key as Key.Letter).char.toString(),
                 color = if (isSystemInDarkTheme())
                     DarkKeyPadTextColor
                 else
                     LightKeyPadTextColor,
-                fontSize = 14.sp
+                fontSize = 18.sp
             )
         }
-
     }
 }
 
@@ -91,6 +95,7 @@ fun KeyPadPreview() {
             Row(horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
                 KeyPad(
+                    modifier = Modifier,
                     key = Key.Enter,
                     state = LetterState.CORRECT,
                 )
