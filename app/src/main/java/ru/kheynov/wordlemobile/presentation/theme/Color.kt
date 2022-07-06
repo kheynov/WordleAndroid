@@ -1,6 +1,5 @@
 package ru.kheynov.wordlemobile.presentation.theme
 
-import android.hardware.lights.Light
 import androidx.compose.ui.graphics.Color
 import ru.kheynov.wordlemobile.presentation.util.LetterState.*
 
