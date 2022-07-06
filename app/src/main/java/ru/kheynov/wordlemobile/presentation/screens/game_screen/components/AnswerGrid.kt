@@ -13,19 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.kheynov.wordlemobile.presentation.theme.WordleMobileTheme
+import ru.kheynov.wordlemobile.presentation.util.Cell
 import ru.kheynov.wordlemobile.presentation.util.LetterState
-
-
-data class Cell(
-    val x: Int,
-    val y: Int,
-    val state: LetterState,
-    val letter: Char,
-)
 
 @Composable
 fun AnswerGrid(
-    state: List<Cell>,
+    state: List<Cell>?,
     size: Pair<Int, Int> = Pair(6, 5),
 ) {
     Box(modifier = Modifier
@@ -37,7 +30,7 @@ fun AnswerGrid(
                 Row(Modifier.fillMaxWidth()) {
                     repeat(size.second) { y ->
 
-                        val cellState = state.find { cell -> cell.x == x && cell.y == y }
+                        val cellState = state?.find { cell -> cell.x == x && cell.y == y }
 
                         AnswerCell(
                             modifier = Modifier
