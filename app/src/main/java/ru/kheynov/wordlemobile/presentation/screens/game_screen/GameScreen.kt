@@ -1,6 +1,6 @@
 package ru.kheynov.wordlemobile.presentation.screens.game_screen
 
-import androidx.compose.foundation.clickable
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,8 @@ import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Answe
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Header
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Keyboard
 
+private const val TAG = "GameScreen"
+
 @Composable
 fun GameScreen(
     viewModel: GameScreenViewModel = hiltViewModel(),
@@ -22,13 +24,15 @@ fun GameScreen(
 
     val answerGrid = viewModel.answerState.observeAsState()
 
+    Log.i(TAG, "GameScreen: RECOMPOSITION")
+
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween) {
         Header(language = viewModel.language, onLanguageChange = {})
         AnswerGrid(state = answerGrid.value)
         Box(modifier = Modifier
-            .wrapContentHeight()
-            .clickable { viewModel.loadWord() },
+            .wrapContentHeight(),
+//            .clickable { viewModel.loadWord() }, TODO: load word automatically
             contentAlignment = Alignment.BottomCenter) {
             Keyboard(
                 onErase = { viewModel.eraseLetter() },
