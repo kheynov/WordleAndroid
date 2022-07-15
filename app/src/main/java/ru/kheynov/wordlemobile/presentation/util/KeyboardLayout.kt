@@ -3,6 +3,42 @@ package ru.kheynov.wordlemobile.presentation.util
 import ru.kheynov.wordlemobile.presentation.util.Key.*
 
 object KeyboardLayout {
+    val English = listOf(
+        listOf(
+            Letter('q'),
+            Letter('w'),
+            Letter('e'),
+            Letter('r'),
+            Letter('t'),
+            Letter('y'),
+            Letter('u'),
+            Letter('i'),
+            Letter('o'),
+            Letter('p'),
+        ),
+        listOf(
+            Letter('a'),
+            Letter('s'),
+            Letter('d'),
+            Letter('f'),
+            Letter('g'),
+            Letter('h'),
+            Letter('j'),
+            Letter('k'),
+            Letter('l'),
+        ),
+        listOf(
+            Erase,
+            Letter('z'),
+            Letter('x'),
+            Letter('c'),
+            Letter('v'),
+            Letter('b'),
+            Letter('n'),
+            Letter('m'),
+            Enter,
+        )
+    )
     val Russian = listOf(
         listOf(
             Letter('й'),

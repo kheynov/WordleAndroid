@@ -13,8 +13,12 @@ val LightBackground = Color(0xFFFFFFFF)
 val DarkGridDividerColor = Color(0xFF404040)
 val LightGridDividerColor = Color(0xFFD4D4D4)
 
-private val DarkMiss = Color(0xFF3A3A3C)
-private val LightMiss = Color(0xFF787C7E)
+private val DarkMiss = Color(0xFF73737A)
+private val DarkKeyboardMiss = Color(0xFF000000)
+
+
+private val LightMiss = Color(0xFF2F3031)
+private val LightKeyboardMiss = Color(0xFF2F3031)
 
 private val DarkNotUsed = Color(0xFF818384)
 private val LightNotUsed = Color(0xFF818384) //TODO
@@ -25,7 +29,7 @@ data class KeyboardColors(
     private val colors = mapOf(
         CORRECT to Color(0xFF6AAA64),
         CONTAINED to Color(0xFFC9B458),
-        MISS to if (isDarkTheme) DarkMiss else LightMiss,
+        MISS to if (isDarkTheme) DarkKeyboardMiss else LightKeyboardMiss,
         NOT_USED to if (isDarkTheme) DarkNotUsed else LightNotUsed,
     )
 
