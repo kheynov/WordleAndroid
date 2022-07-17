@@ -6,7 +6,7 @@ import retrofit2.http.Query
 import ru.kheynov.wordlemobile.domain.entities.Word
 
 interface WordleApi {
-    @GET("words")
+    @GET("word")
     suspend fun getWord(
         @Query("lang") language: String = "ru",
     ): Response<Word>

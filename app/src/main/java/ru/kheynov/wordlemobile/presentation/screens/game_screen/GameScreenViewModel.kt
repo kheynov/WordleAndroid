@@ -3,11 +3,12 @@ package ru.kheynov.wordlemobile.presentation.screens.game_screen
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.kheynov.wordlemobile.data.repository.WordleRepositoryImpl
-import ru.kheynov.wordlemobile.domain.entities.Word
 import ru.kheynov.wordlemobile.presentation.util.Cell
 import ru.kheynov.wordlemobile.presentation.util.KeyboardLayout
 import ru.kheynov.wordlemobile.presentation.util.Language
@@ -45,18 +46,18 @@ class GameScreenViewModel @Inject constructor(
         private set
 
     init {
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             loadWord()
-        }*/
+        }
         keyboardLayout.value = KeyboardLayout.Russian
         language.value = Language.Russian.text
-        testLoadWord()
     }
 
-    suspend fun loadWord() {
+    private suspend fun loadWord() {
         screenState.postValue(GameScreenState.Loading)
         try {
-            val response = repository.getWord(language.value ?: Language.Russian.text)
+            val response = repository.getWord(if (language.value.isNullOrEmpty()) Language.Russian
+                .text else language.value!!)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     screenState.postValue(GameScreenState.Loaded(response.body()))
@@ -70,26 +71,22 @@ class GameScreenViewModel @Inject constructor(
             screenState.value = GameScreenState.Error(e.localizedMessage?.toString()
                 ?: "Unknown error")
         }
-        Log.i(TAG, "loadWord: Error, ${(screenState.value as GameScreenState.Error).error}")
-    }
-
-    private fun testLoadWord() {
-        if (language.value == Language.Russian.text || language.value.isNullOrEmpty())
-            screenState.value = GameScreenState.Loaded(Word("ru", "сироп", 234))
-        else screenState.value = GameScreenState.Loaded(Word("en", "syrup", 234))
+        Log.i(TAG, "state: ${screenState.value}")
     }
 
     fun changeLanguage(language: Language) {
-        repository.language = language.text
-        this.language.value = language.text
-        keyboardLayout.value = when (language) {
-            Language.English -> KeyboardLayout.English
-            Language.Russian -> KeyboardLayout.Russian
+        if (this.language.value != language.text) {
+            repository.language = language.text
+            this.language.value = language.text
+            keyboardLayout.value = when (language) {
+                Language.English -> KeyboardLayout.English
+                Language.Russian -> KeyboardLayout.Russian
+            }
+            clearState()
+            viewModelScope.launch {
+                loadWord()
+            }
         }
-        testLoadWord()
-        /*viewModelScope.launch {
-            loadWord()
-        }*/
     }
 
     fun appendLetter(letter: Char) {
@@ -158,8 +155,18 @@ class GameScreenViewModel @Inject constructor(
 
         if (columnCounter == 5) {
             Log.i(TAG, "checkWord: End reached")
+            clearState()
             return
         } //TODO: end reached
+    }
+
+    private fun clearState() {
+        _keyboardState.clear()
+        keyboardState.value = _keyboardState.toMap()
+        _answerState.clear()
+        answerState.value = _answerState.toList()
+        columnCounter = 0
+        rowCounter = 0
     }
 
 }
@@ -177,4 +184,3 @@ fun List<Cell>.checkWord(word: String): List<LetterState> {
     }
     return res.toList()
 }
-

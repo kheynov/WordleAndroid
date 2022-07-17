@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
@@ -31,6 +33,7 @@ fun Header(
     modifier: Modifier = Modifier,
     language: String,
     onLanguageChange: (Language) -> Unit,
+    isLoading: Boolean = true,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -39,7 +42,17 @@ fun Header(
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 8.dp)
     ) {
-        Spacer(modifier = Modifier.weight(2f))
+        if (isLoading)
+            Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(45.dp),
+                    color = Color.Green
+                )
+            }
+        else
+            Spacer(modifier = Modifier.weight(2f))
+
         Text(modifier = Modifier.weight(5f), text = "Wordle($language)", fontSize = 36.sp,
             textAlign = TextAlign.Center)
         Box(modifier = Modifier.weight(2f)) {

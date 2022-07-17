@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -50,17 +49,20 @@ fun GameScreen(
                 24.sp,
                 modifier = Modifier.fillMaxSize()
             )
-            is GameScreenState.Loading -> CircularProgressIndicator()
             else -> {
-                Header(language = language.value ?: Language.Russian.text,
+                Header(
+                    language = language.value ?: Language.Russian.text,
                     onLanguageChange = {
                         viewModel.changeLanguage(it)
-                    })
+                    },
+                    isLoading = state.value is GameScreenState.Loading
+                )
                 AnswerGrid(state = answerGrid.value)
                 Box(modifier = Modifier
                     .wrapContentHeight(),
                     contentAlignment = Alignment.BottomCenter) {
                     Keyboard(
+                        isActive = state.value is GameScreenState.Loaded,
                         layout = keyboardLayout.value!!,
                         state = viewModel.keyboardState.value,
                         onErase = { viewModel.eraseLetter() },

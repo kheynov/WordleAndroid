@@ -23,6 +23,7 @@ import ru.kheynov.wordlemobile.presentation.util.LetterState
 
 @Composable
 fun Keyboard(
+    isActive: Boolean = true,
     state: Map<Char, LetterState>? = null,
     layout: List<List<Key>> = KeyboardLayout.Russian,
     onErase: () -> Unit = {},
@@ -43,7 +44,8 @@ fun Keyboard(
                         key = key,
                         state = state?.get((key as Key.Letter).char) ?: LetterState.NOT_USED,
                         onClick = { letter ->
-                            onLetterClick((letter as Key.Letter).char)
+                            if (isActive)
+                                onLetterClick((letter as Key.Letter).char)
                         },
                     )
                 }
@@ -58,7 +60,8 @@ fun Keyboard(
                         key = key,
                         state = state?.get((key as Key.Letter).char) ?: LetterState.NOT_USED,
                         onClick = { letter ->
-                            onLetterClick((letter as Key.Letter).char)
+                            if (isActive)
+                                onLetterClick((letter as Key.Letter).char)
                         },
                     )
                 }
@@ -74,7 +77,8 @@ fun Keyboard(
                             key = key,
                             state = state?.get(key.char) ?: LetterState.NOT_USED,
                             onClick = { letter ->
-                                onLetterClick((letter as Key.Letter).char)
+                                if (isActive)
+                                    onLetterClick((letter as Key.Letter).char)
                             },
                         )
                         else -> KeyPad(modifier = Modifier
@@ -82,8 +86,10 @@ fun Keyboard(
                             .padding(horizontal = 3.dp),
                             key = key,
                             onClick = {
-                                if (it is Key.Erase) onErase()
-                                else onEnter()
+                                if (isActive) {
+                                    if (it is Key.Erase) onErase()
+                                    else onEnter()
+                                }
                             }
                         )
                     }

@@ -14,7 +14,7 @@ val DarkGridDividerColor = Color(0xFF404040)
 val LightGridDividerColor = Color(0xFFD4D4D4)
 
 private val DarkMiss = Color(0xFF73737A)
-private val DarkKeyboardMiss = Color(0xFF000000)
+private val DarkKeyboardMiss = Color(0xFF393636)
 
 
 private val LightMiss = Color(0xFF2F3031)

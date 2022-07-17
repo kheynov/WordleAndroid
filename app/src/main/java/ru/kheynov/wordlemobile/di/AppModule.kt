@@ -19,7 +19,7 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun provideBaseUrl(): String = "http://wordle.kheynov.ru"
+    fun provideBaseUrl(): String = "https://wordle.kheynov.ru"
 
     private val json = Json { ignoreUnknownKeys = true }
 
