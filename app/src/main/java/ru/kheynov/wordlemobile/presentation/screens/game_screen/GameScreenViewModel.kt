@@ -8,8 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import ru.kheynov.wordlemobile.data.repository.WordleRepositoryImpl
 import ru.kheynov.wordlemobile.presentation.util.Cell
+import ru.kheynov.wordlemobile.presentation.util.GameResult
 import ru.kheynov.wordlemobile.presentation.util.KeyboardLayout
 import ru.kheynov.wordlemobile.presentation.util.Language
 import ru.kheynov.wordlemobile.presentation.util.LetterState
@@ -60,6 +63,20 @@ class GameScreenViewModel @Inject constructor(
                 .text else language.value!!)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
+                    try {
+                        Log.i(TAG, repository.results.toString())
+                        if (!repository.results.toString().isEmpty()) {
+                            val lastResults =
+                                Json.decodeFromString(GameResult.serializer(),
+                                    repository.results.toString())
+                            if (lastResults.word == response.body()?.word) {
+                                screenState.postValue(GameScreenState.Results(lastResults))
+                                return@withContext
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, e.stackTraceToString())
+                    }
                     screenState.postValue(GameScreenState.Loaded(response.body()))
                     answerState.postValue(mutableListOf())
                     Log.i(TAG, "loadWord: DATA, ${screenState.value.toString()}")
@@ -123,6 +140,8 @@ class GameScreenViewModel @Inject constructor(
         rowCounter = 0
         Log.i(TAG, "State: ${screenState.value}")
 
+        //TODO: Check word via API
+
         val result = _answerState.checkWord(word = (screenState.value as GameScreenState.Loaded)
             .data?.word.toString())
 
@@ -143,21 +162,42 @@ class GameScreenViewModel @Inject constructor(
             _keyboardState[cell.letter] = cell.state
         }
 
+        val results = _answerState.fold(mutableListOf<LetterState>()) { acc, v ->
+            (acc + v.state) as MutableList<LetterState>
+        }.toList()
+
+        if (checkWordGuessed(results.takeLast(5))) {
+            val gameResult = GameResult(
+                cells = results,
+                language = this.language.value.toString(),
+                timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
+                word = (screenState.value as GameScreenState.Loaded).data?.word ?: "")
+            screenState.value = GameScreenState.Results(gameResult)
+            Log.i(TAG, Json.encodeToString(gameResult))
+            repository.saveResults(Json.encodeToString(gameResult))
+        }
+
         Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
         answerState.value = emptyList()
         answerState.value = (_answerState.toList())
         keyboardState.value = mapOf()
         keyboardState.value = _keyboardState.toMap()
 
-        //TODO: update keyboard state
-
-        //TODO: check if all letters are correct
-
-        if (columnCounter == 5) {
+        if (columnCounter == 6) {
             Log.i(TAG, "checkWord: End reached")
+            val gameResult = GameResult(
+                cells = results,
+                language = this.language.value.toString(),
+                timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
+                word = (screenState.value as GameScreenState.Loaded).data?.word ?: "",
+            )
+            repository.saveResults(Json.encodeToString(gameResult))
+
+            screenState.value = GameScreenState.Results(gameResult)
+
             clearState()
             return
-        } //TODO: end reached
+        }
     }
 
     private fun clearState() {
@@ -169,6 +209,15 @@ class GameScreenViewModel @Inject constructor(
         rowCounter = 0
     }
 
+}
+
+fun checkWordGuessed(word: List<LetterState>): Boolean {
+    for (i in word) {
+        if (i != LetterState.CORRECT) {
+            return false
+        }
+    }
+    return true
 }
 
 fun List<Cell>.checkWord(word: String): List<LetterState> {

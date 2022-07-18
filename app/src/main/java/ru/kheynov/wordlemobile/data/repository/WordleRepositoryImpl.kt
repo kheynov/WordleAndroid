@@ -16,5 +16,12 @@ class WordleRepositoryImpl @Inject constructor(
 
     var language = prefStorage.language
 
+    var results = prefStorage.results
+        private set
+
+    fun saveResults(result: String) {
+        prefStorage.results = result
+    }
+
     override suspend fun getWord(language: String): Response<Word> = wordleApi.getWord(language)
 }

@@ -20,14 +20,23 @@ class PrefStorage @Inject constructor(
         set(value) {
             if (field != value) {
                 field = value
-                saveToPreferences(value ?: Language.Russian.text)
+                saveToPreferences("language", value ?: Language.Russian.text)
             }
         }
         get() = prefs.getString("language", "")
 
-    private fun saveToPreferences(value: String) {
+    var results: String? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                saveToPreferences("results", value ?: "")
+            }
+        }
+        get() = prefs.getString("results", "")
+
+    private fun saveToPreferences(key: String, value: String) {
         val editor: SharedPreferences.Editor = prefs.edit()
-        editor.putString("language", value)
+        editor.putString(key, value)
         editor.apply()
     }
 }
