@@ -74,7 +74,7 @@ fun KeyPad(
                     null
             )
             else -> Text(
-                text = if (key is Key.Enter) "Ввод" else (key as Key.Letter).char.toString(),
+                text = if (key is Key.Enter) "Ввод" else (key as Key.Letter).char.toString().uppercase(),
                 color = if (isSystemInDarkTheme())
                     DarkKeyPadTextColor
                 else

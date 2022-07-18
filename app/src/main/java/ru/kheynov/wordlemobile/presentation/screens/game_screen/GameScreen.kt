@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.AnswerGrid
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Header
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Keyboard
+import ru.kheynov.wordlemobile.presentation.screens.results_screen.ResultScreen
 import ru.kheynov.wordlemobile.presentation.util.Language
 
 private const val TAG = "GameScreen"
@@ -38,6 +39,13 @@ fun GameScreen(
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween) {
+        Header(
+            language = language.value ?: Language.Russian.text,
+            onLanguageChange = {
+                viewModel.changeLanguage(it)
+            },
+            isLoading = state.value is GameScreenState.Loading
+        )
         when (state.value) {
             is GameScreenState.Error -> Text(text = "Ошибка: ${
                 (state.value as GameScreenState
@@ -49,14 +57,9 @@ fun GameScreen(
                 24.sp,
                 modifier = Modifier.fillMaxSize()
             )
+            is GameScreenState.Results ->
+                ResultScreen(result = (state.value as GameScreenState.Results).results)
             else -> {
-                Header(
-                    language = language.value ?: Language.Russian.text,
-                    onLanguageChange = {
-                        viewModel.changeLanguage(it)
-                    },
-                    isLoading = state.value is GameScreenState.Loading
-                )
                 AnswerGrid(state = answerGrid.value)
                 Box(modifier = Modifier
                     .wrapContentHeight(),

@@ -47,7 +47,7 @@ fun Header(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(45.dp),
-                    color = Color.Green
+                    color = Color.White,
                 )
             }
         else
