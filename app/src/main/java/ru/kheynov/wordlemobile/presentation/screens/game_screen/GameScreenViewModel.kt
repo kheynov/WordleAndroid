@@ -105,6 +105,7 @@ class GameScreenViewModel @Inject constructor(
                     } catch (e: Exception) {
                         Log.e(TAG, e.stackTraceToString())
                     }
+                    clearState()
                     screenState.value = GameScreenState.Loaded(response.body())
                     Log.i(TAG, "loadWord: DATA, ${screenState.value.toString()}")
                     return@withContext
