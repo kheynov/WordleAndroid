@@ -11,6 +11,7 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
@@ -47,13 +47,15 @@ fun Header(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(45.dp),
-                    color = Color.White,
+                    color = MaterialTheme.colors.onBackground,
                 )
             }
         else
             Spacer(modifier = Modifier.weight(2f))
 
-        Text(modifier = Modifier.weight(5f), text = "Wordle($language)", fontSize = 36.sp,
+        Text(modifier = Modifier.weight(5f),
+            text = "Wordle(${language.uppercase()})",
+            fontSize = 36.sp,
             textAlign = TextAlign.Center)
         Box(modifier = Modifier.weight(2f)) {
 

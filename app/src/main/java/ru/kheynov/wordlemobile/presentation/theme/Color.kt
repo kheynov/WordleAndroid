@@ -17,7 +17,7 @@ private val DarkMiss = Color(0xFF73737A)
 private val DarkKeyboardMiss = Color(0xFF393636)
 
 
-private val LightMiss = Color(0xFF2F3031)
+private val LightMiss = Color(0xFF636668)
 private val LightKeyboardMiss = Color(0xFF2F3031)
 
 private val DarkNotUsed = Color(0xFF818384)

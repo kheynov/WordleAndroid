@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -17,6 +18,7 @@ import ru.kheynov.wordlemobile.presentation.util.GameResult
 import ru.kheynov.wordlemobile.presentation.util.KeyboardLayout
 import ru.kheynov.wordlemobile.presentation.util.Language
 import ru.kheynov.wordlemobile.presentation.util.LetterState
+import ru.kheynov.wordlemobile.presentation.util.SavedState
 import javax.inject.Inject
 
 private const val TAG = "GameScreenVM"
@@ -50,28 +52,52 @@ class GameScreenViewModel @Inject constructor(
         private set
 
     init {
+        fetchSavedState()
+        keyboardLayout.value = KeyboardLayout.Russian
+        language.value = Language.Russian.text
         viewModelScope.launch {
             loadWord()
         }
-        keyboardLayout.value = KeyboardLayout.Russian
-        language.value = Language.Russian.text
+
+    }
+
+    private fun fetchSavedState() {
+        try {
+            val res = Json.decodeFromString<List<SavedState>>(repository.state)
+            Log.i(TAG, "saved state: $res")
+            if (res.isNotEmpty()) {
+                res.forEach {
+                    if (it.language == language.value) {
+                        _answerState = it.cellState.toMutableList()
+                        _keyboardState = it.keyboardState.toMutableMap()
+                        answerState.value = _answerState.toList()
+                        keyboardState.value = _keyboardState.toMap()
+                        columnCounter = _answerState.size / 5
+                        rowCounter = _answerState.size % 5
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.stackTraceToString())
+        }
     }
 
     private suspend fun loadWord() {
-        screenState.postValue(GameScreenState.Loading)
+        screenState.value = GameScreenState.Loading
         try {
             val response = repository.getWord(if (language.value.isNullOrEmpty()) Language.Russian
                 .text else language.value!!)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     try {
-                        Log.i(TAG, repository.results.toString())
-                        if (repository.results.toString().isNotEmpty()) {
+                        delay(1000)
+                        if (repository.results.isNotEmpty()) {
                             val lastResults =
-                                Json.decodeFromString<List<GameResult>>(repository.results.toString())
+                                Json.decodeFromString<List<GameResult>>(repository.results)
+                            Log.i(TAG, "saved results: $lastResults")
                             lastResults.forEach {
                                 if (it.word == response.body()?.word) {
-                                    screenState.postValue(GameScreenState.Results(it))
+                                    screenState.value = GameScreenState.Results(it)
                                     return@withContext
                                 }
                             }
@@ -79,8 +105,7 @@ class GameScreenViewModel @Inject constructor(
                     } catch (e: Exception) {
                         Log.e(TAG, e.stackTraceToString())
                     }
-                    screenState.postValue(GameScreenState.Loaded(response.body()))
-                    answerState.postValue(mutableListOf())
+                    screenState.value = GameScreenState.Loaded(response.body())
                     Log.i(TAG, "loadWord: DATA, ${screenState.value.toString()}")
                     return@withContext
                 }
@@ -101,10 +126,11 @@ class GameScreenViewModel @Inject constructor(
                 Language.English -> KeyboardLayout.English
                 Language.Russian -> KeyboardLayout.Russian
             }
-            clearState()
             viewModelScope.launch {
                 loadWord()
             }
+            clearState()
+            fetchSavedState()
         }
     }
 
@@ -119,7 +145,7 @@ class GameScreenViewModel @Inject constructor(
                 )
             )
             rowCounter++
-            answerState.postValue(_answerState.toList())
+            answerState.value = _answerState.toList()
             Log.i(TAG, "state: ${answerState.value.toString()}")
         } else {
             Log.i(TAG, "End reached")
@@ -130,7 +156,7 @@ class GameScreenViewModel @Inject constructor(
         if (rowCounter > 0) {
             _answerState.removeLast()
             rowCounter--
-            answerState.postValue(_answerState.toList())
+            answerState.value = _answerState.toList()
         } else {
             Log.i(TAG, "eraseLetter: start reached")
         }
@@ -144,25 +170,9 @@ class GameScreenViewModel @Inject constructor(
 
         //TODO: Check word via API
 
-        val result = _answerState.checkWord(word = (screenState.value as GameScreenState.Loaded)
-            .data?.word.toString())
 
-        Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
+        updateKeyboardState()
 
-        for (i in _answerState.indices) {
-            if (i < _answerState.size - 5) continue
-
-            val cell = _answerState[i]
-            val state = result[i % 5]
-            cell.state = state
-            if (_keyboardState.containsKey(cell.letter)) {
-                if (
-                    _keyboardState[cell.letter] == LetterState.CORRECT ||
-                    _keyboardState[cell.letter] == LetterState.MISS
-                ) continue
-            }
-            _keyboardState[cell.letter] = cell.state
-        }
 
         val results = _answerState.fold(mutableListOf<LetterState>()) { acc, v ->
             (acc + v.state) as MutableList<LetterState>
@@ -177,6 +187,7 @@ class GameScreenViewModel @Inject constructor(
             screenState.value = GameScreenState.Results(gameResult)
             Log.i(TAG, Json.encodeToString(gameResult))
             saveResults(gameResult)
+            return
         }
 
         Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
@@ -200,7 +211,33 @@ class GameScreenViewModel @Inject constructor(
             screenState.value = GameScreenState.Results(gameResult)
 
             clearState()
-            return
+//            return
+        }
+        saveState(SavedState(
+            language = language.value.toString(),
+            cellState = _answerState,
+            keyboardState = _keyboardState
+        ))
+    }
+
+    private fun updateKeyboardState() {
+        val result = _answerState.checkWord(word = (screenState.value as GameScreenState.Loaded)
+            .data?.word.toString())
+
+        Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
+        for (i in _answerState.indices) {
+            if (i < _answerState.size - 5) continue
+
+            val cell = _answerState[i]
+            val state = result[i % 5]
+            cell.state = state
+            if (_keyboardState.containsKey(cell.letter)) {
+                if (
+                    _keyboardState[cell.letter] == LetterState.CORRECT ||
+                    _keyboardState[cell.letter] == LetterState.MISS
+                ) continue
+            }
+            _keyboardState[cell.letter] = cell.state
         }
     }
 
@@ -214,11 +251,13 @@ class GameScreenViewModel @Inject constructor(
     }
 
     private fun saveResults(results: GameResult) {
-        Log.i(TAG, repository.results.toString())
+        Log.i(TAG, "saveResults/repository: ${repository.results}")
         var currentResults: MutableList<GameResult>? = emptyList<GameResult>().toMutableList()
-        if (repository.results != null && repository.results!!.isNotEmpty()) {
-            currentResults = Json.decodeFromString<List<GameResult>>(repository.results!!).toMutableList()
-            for (i in currentResults.indices) {
+        if (repository.results.isNotEmpty()) {
+            currentResults =
+                Json.decodeFromString<List<GameResult>>(repository.results).toMutableList()
+            Log.i(TAG, "saveResults: currentResults: $currentResults")
+            for (i in 0 until currentResults.size - 1) {
                 if (currentResults[i].language == results.language) {
                     currentResults.removeAt(i)
                 }
@@ -226,6 +265,22 @@ class GameScreenViewModel @Inject constructor(
         }
         currentResults?.add(results)
         repository.saveResults(Json.encodeToString(currentResults))
+    }
+
+    private fun saveState(state: SavedState) {
+        Log.i(TAG, "repository.state: ${repository.state}")
+        var currentState: MutableList<SavedState>? = emptyList<SavedState>().toMutableList()
+        if (repository.state.isNotEmpty()) {
+            currentState =
+                Json.decodeFromString<List<SavedState>>(repository.state).toMutableList()
+            for (i in 0 until currentState.size - 1) {
+                if (currentState[i].language == state.language) {
+                    currentState.removeAt(i)
+                }
+            }
+        }
+        currentState?.add(state)
+        repository.saveState(Json.encodeToString(currentState))
     }
 
 }
