@@ -20,6 +20,7 @@ import ru.kheynov.wordlemobile.presentation.util.LetterState
 fun AnswerGrid(
     state: List<Cell>?,
     size: Pair<Int, Int> = Pair(6, 5),
+    onAnimationFinished: () -> Unit = {},
 ) {
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -36,7 +37,8 @@ fun AnswerGrid(
                                 .padding(4.dp),
                             state = cellState?.state ?: LetterState.NOT_USED,
                             letter = cellState?.letter ?: ' ',
-                            animationDelay = y * 200
+                            animationDelay = y * 200,
+                            onAnimationFinished = onAnimationFinished
                         )
                     }
                 }

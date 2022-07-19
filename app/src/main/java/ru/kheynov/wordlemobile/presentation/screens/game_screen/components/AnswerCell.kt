@@ -39,6 +39,7 @@ fun AnswerCell(
     state: LetterState,
     letter: Char?,
     animationDelay: Int = 0,
+    onAnimationFinished: () -> Unit = {},
 ) {
     val isScaleAnimated = letter != ' '
 
@@ -58,6 +59,8 @@ fun AnswerCell(
         rotation.animateTo(if (isRotateAnimated) targetRotate else 0f,
             animationSpec = tween(1200, animationDelay))
     }
+
+    if (rotation.value == targetRotate) onAnimationFinished()
 
     Box(
         modifier = modifier
