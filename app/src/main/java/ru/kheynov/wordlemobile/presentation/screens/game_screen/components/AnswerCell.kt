@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ fun AnswerCell(
     modifier: Modifier = Modifier,
     state: LetterState,
     letter: Char?,
+    animationDelay: Int = 0,
 ) {
     val isScaleAnimated = letter != ' '
 
@@ -50,8 +52,11 @@ fun AnswerCell(
         scale.animateTo(if (isScaleAnimated) 1.08f else 1f, animationSpec = tween(150))
     }
 
+    val targetRotate = 180f
+
     LaunchedEffect(isRotateAnimated) {
-        rotation.animateTo(if (isRotateAnimated) 180f else 0f, animationSpec = tween(1500))
+        rotation.animateTo(if (isRotateAnimated) targetRotate else 0f,
+            animationSpec = tween(1200, animationDelay))
     }
 
     Box(
@@ -59,7 +64,11 @@ fun AnswerCell(
             .defaultMinSize(40.dp, 40.dp)
             .scale(scale.value)
             .graphicsLayer(rotationX = rotation.value)
-            .background(CellColors(isSystemInDarkTheme()).getColor(state)!!)
+            .background(
+                if (targetRotate - rotation.value < 90)
+                    CellColors(isSystemInDarkTheme()).getColor(state)!!
+                else MaterialTheme.colors.background
+            )
             .border(BorderStroke(
                 1.dp,
                 if (isSystemInDarkTheme()) DarkGridDividerColor else

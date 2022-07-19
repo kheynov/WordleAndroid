@@ -105,7 +105,17 @@ class GameScreenViewModel @Inject constructor(
                     } catch (e: Exception) {
                         Log.e(TAG, e.stackTraceToString())
                     }
-                    clearState()
+                    response.body()?.word?.let {
+                        if (it.isEmpty() || it.split(",").size == 1) return@let
+                        if (
+                            repository.lastWord != it.split(",")[0] &&
+                            language.value.toString() == it.split(",")[1]
+                        ) {
+                            repository.saveWord(it, language.value.toString())
+                            clearState()
+                        }
+                    }
+
                     screenState.value = GameScreenState.Loaded(response.body())
                     Log.i(TAG, "loadWord: DATA, ${screenState.value.toString()}")
                     return@withContext
@@ -171,9 +181,7 @@ class GameScreenViewModel @Inject constructor(
 
         //TODO: Check word via API
 
-
         updateKeyboardState()
-
 
         val results = _answerState.fold(mutableListOf<LetterState>()) { acc, v ->
             (acc + v.state) as MutableList<LetterState>

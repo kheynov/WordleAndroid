@@ -30,5 +30,12 @@ class WordleRepositoryImpl @Inject constructor(
         prefStorage.state = state
     }
 
+    val lastWord: String
+        get() = prefStorage.lastWord.toString()
+
+    fun saveWord(word: String, language: String) {
+        prefStorage.lastWord = "$word,$language"
+    }
+
     override suspend fun getWord(language: String): Response<Word> = wordleApi.getWord(language)
 }

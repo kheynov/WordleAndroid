@@ -43,6 +43,15 @@ class PrefStorage @Inject constructor(
         }
         get() = prefs.getString("state", "")
 
+    var lastWord: String? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                saveToPreferences("lastWord", value ?: "")
+            }
+        }
+        get() = prefs.getString("lastWord", "")
+
     private fun saveToPreferences(key: String, value: String) {
         val editor: SharedPreferences.Editor = prefs.edit()
         editor.putString(key, value)

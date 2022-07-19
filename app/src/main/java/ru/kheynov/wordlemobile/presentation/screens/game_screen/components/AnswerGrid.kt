@@ -29,15 +29,14 @@ fun AnswerGrid(
             repeat(size.first) { x ->
                 Row(Modifier.fillMaxWidth()) {
                     repeat(size.second) { y ->
-
                         val cellState = state?.find { cell -> cell.x == x && cell.y == y }
-
                         AnswerCell(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(4.dp),
                             state = cellState?.state ?: LetterState.NOT_USED,
-                            letter = cellState?.letter ?: ' '
+                            letter = cellState?.letter ?: ' ',
+                            animationDelay = y * 200
                         )
                     }
                 }
