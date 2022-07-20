@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -73,10 +74,15 @@ fun GameScreen(
                     .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    AnswerGrid(
-                        Modifier.fillMaxSize(),
-                        state = answerGrid.value,
-                        onAnimationFinished = { viewModel.validateWord() })
+                    LazyColumn(modifier = Modifier
+                        .fillMaxSize()
+                    ) {
+                        item {
+                            AnswerGrid(
+                                state = answerGrid.value,
+                                onAnimationFinished = { viewModel.validateWord() })
+                        }
+                    }
                 }
                 //Keyboard block
                 Box(modifier = Modifier.requiredHeight(200.dp),
