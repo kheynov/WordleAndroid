@@ -24,9 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.kheynov.wordlemobile.R
 import ru.kheynov.wordlemobile.presentation.util.Language
+import ru.kheynov.wordlemobile.presentation.util.scaledSp
 
 @Composable
 fun Header(
@@ -55,7 +55,7 @@ fun Header(
 
         Text(modifier = Modifier.weight(5f),
             text = "Wordle(${language.uppercase()})",
-            fontSize = 36.sp,
+            fontSize = 36.scaledSp(),
             textAlign = TextAlign.Center)
         Box(modifier = Modifier.weight(2f)) {
 

@@ -52,9 +52,9 @@ class GameScreenViewModel @Inject constructor(
         private set
 
     init {
-        fetchSavedState()
         keyboardLayout.value = KeyboardLayout.Russian
         language.value = Language.Russian.text
+        fetchSavedState()
         viewModelScope.launch {
             loadWord()
         }
@@ -106,7 +106,8 @@ class GameScreenViewModel @Inject constructor(
                         Log.e(TAG, e.stackTraceToString())
                     }
                     response.body()?.word?.let {
-                        if (it.isEmpty() || it.split(",").size == 1) return@let
+                        if (repository.lastWord.isEmpty() || repository.lastWord.split(",").size == 1)
+                            return@let
                         if (
                             repository.lastWord != it.split(",")[0] &&
                             language.value.toString() == it.split(",")[1]

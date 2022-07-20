@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.kheynov.wordlemobile.R
 import ru.kheynov.wordlemobile.presentation.theme.DarkKeyPadTextColor
 import ru.kheynov.wordlemobile.presentation.theme.KeyboardColors
@@ -31,6 +30,7 @@ import ru.kheynov.wordlemobile.presentation.theme.LightKeyPadTextColor
 import ru.kheynov.wordlemobile.presentation.theme.WordleMobileTheme
 import ru.kheynov.wordlemobile.presentation.util.Key
 import ru.kheynov.wordlemobile.presentation.util.LetterState
+import ru.kheynov.wordlemobile.presentation.util.scaledSp
 
 @Composable
 fun KeyPad(
@@ -74,16 +74,18 @@ fun KeyPad(
                     null
             )
             else -> Text(
-                text = if (key is Key.Enter) "Ввод" else (key as Key.Letter).char.toString().uppercase(),
+                text = if (key is Key.Enter) "Ввод" else (key as Key.Letter).char.toString()
+                    .uppercase(),
                 color = if (isSystemInDarkTheme())
                     DarkKeyPadTextColor
                 else
                     LightKeyPadTextColor,
-                fontSize = 18.sp
+                fontSize = 18.scaledSp()
             )
         }
     }
 }
+
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)

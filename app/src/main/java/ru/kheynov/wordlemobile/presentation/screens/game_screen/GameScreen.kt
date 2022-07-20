@@ -39,6 +39,8 @@ fun GameScreen(
 
     val answerGrid = viewModel.answerState.observeAsState()
 
+    val keyboardState = viewModel.keyboardState.observeAsState()
+
     Log.i(TAG, "GameScreen: RECOMPOSITION")
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -84,15 +86,16 @@ fun GameScreen(
                         }
                     }
                 }
+
                 //Keyboard block
                 Box(modifier = Modifier.requiredHeight(200.dp),
                     contentAlignment = Alignment.BottomCenter) {
+                    Log.i(TAG, "GameScreen: keyboardState: ${keyboardState.value}")
                     Keyboard(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter),
+                        modifier = Modifier,
                         isActive = state.value is GameScreenState.Loaded,
                         layout = keyboardLayout.value!!,
-                        state = viewModel.keyboardState.value,
+                        state = keyboardState.value,
                         onErase = { viewModel.eraseLetter() },
                         onEnter = { viewModel.enterWord() },
                         onLetterClick = { letter -> viewModel.appendLetter(letter) }
