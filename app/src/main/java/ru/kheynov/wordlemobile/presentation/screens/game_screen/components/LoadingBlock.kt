@@ -26,8 +26,12 @@ fun LoadingBlock(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator(modifier = Modifier.padding(bottom = 8.dp), color =
-        MaterialTheme.colors.onBackground)
+
+        CircularProgressIndicator(
+            modifier = Modifier.padding(bottom = 8.dp),
+            color = MaterialTheme.colors.onBackground
+        )
+
         Text(text = "Загружаем слово дня...", fontSize = 24.sp)
     }
 }

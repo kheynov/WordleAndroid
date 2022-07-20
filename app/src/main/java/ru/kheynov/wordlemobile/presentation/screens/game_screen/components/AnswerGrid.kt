@@ -1,7 +1,6 @@
 package ru.kheynov.wordlemobile.presentation.screens.game_screen.components
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,7 +46,7 @@ fun AnswerGrid(
                             animationDelay = y * 200,
                             onAnimationFinished = {
                                 if (y >= 4) {
-                                    Log.i(TAG, "AnswerGrid: Animation FINISHED")
+//                                    Log.i(TAG, "AnswerGrid: Animation FINISHED")
                                     onAnimationFinished()
                                 } else Unit
                             }

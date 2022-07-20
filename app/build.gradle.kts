@@ -14,8 +14,8 @@ android {
         applicationId = "ru.kheynov.worldemobile"
         minSdk = 21
         targetSdk = 32
-        versionCode = 3
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

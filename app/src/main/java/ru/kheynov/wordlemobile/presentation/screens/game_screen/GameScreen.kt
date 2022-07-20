@@ -90,7 +90,6 @@ fun GameScreen(
                 //Keyboard block
                 Box(modifier = Modifier.requiredHeight(200.dp),
                     contentAlignment = Alignment.BottomCenter) {
-                    Log.i(TAG, "GameScreen: keyboardState: ${keyboardState.value}")
                     Keyboard(
                         modifier = Modifier,
                         isActive = state.value is GameScreenState.Loaded,
