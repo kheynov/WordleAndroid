@@ -68,9 +68,11 @@ fun GameScreen(
             is GameScreenState.Loading ->
                 LoadingBlock()
             else -> {
-                AnswerGrid(state = answerGrid.value)
+                AnswerGrid(state = answerGrid.value,
+                    onAnimationFinished = { viewModel.validateWord() })
             }
         }
+
         //Keyboard block
         Box(modifier = Modifier
             .wrapContentHeight(),
@@ -84,6 +86,5 @@ fun GameScreen(
                 onLetterClick = { letter -> viewModel.appendLetter(letter) }
             )
         }
-
     }
 }
