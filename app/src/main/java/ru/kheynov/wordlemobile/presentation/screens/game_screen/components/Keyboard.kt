@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -24,6 +23,7 @@ import ru.kheynov.wordlemobile.presentation.util.LetterState
 
 @Composable
 fun Keyboard(
+    modifier: Modifier = Modifier,
     isActive: Boolean = true,
     state: Map<Char, LetterState>? = null,
     layout: List<List<Key>> = KeyboardLayout.Russian,
@@ -31,9 +31,8 @@ fun Keyboard(
     onEnter: () -> Unit = {},
     onLetterClick: (Char) -> Unit = {},
 ) {
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
-        .requiredHeight(200.dp)
         .padding(4.dp)
     ) {
         Column(Modifier.fillMaxWidth()) {

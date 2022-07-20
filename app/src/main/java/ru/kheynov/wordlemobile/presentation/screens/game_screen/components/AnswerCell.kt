@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -65,7 +64,6 @@ fun AnswerCell(
 
     Box(
         modifier = modifier
-            .defaultMinSize(40.dp, 40.dp)
             .scale(scale.value)
             .graphicsLayer(rotationX = rotation.value)
             .background(
