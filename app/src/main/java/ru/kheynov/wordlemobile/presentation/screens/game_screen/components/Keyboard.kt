@@ -23,6 +23,7 @@ import ru.kheynov.wordlemobile.presentation.util.LetterState
 
 @Composable
 fun Keyboard(
+    modifier: Modifier = Modifier,
     isActive: Boolean = true,
     state: Map<Char, LetterState>? = null,
     layout: List<List<Key>> = KeyboardLayout.Russian,
@@ -30,7 +31,7 @@ fun Keyboard(
     onEnter: () -> Unit = {},
     onLetterClick: (Char) -> Unit = {},
 ) {
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
         .padding(4.dp)
     ) {

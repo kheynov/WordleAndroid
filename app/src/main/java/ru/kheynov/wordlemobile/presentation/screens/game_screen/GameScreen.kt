@@ -1,12 +1,12 @@
 package ru.kheynov.wordlemobile.presentation.screens.game_screen
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -40,10 +40,9 @@ fun GameScreen(
 
     Log.i(TAG, "GameScreen: RECOMPOSITION")
 
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween) {
+    Column(modifier = Modifier.fillMaxSize()) {
         Header(
+            modifier = Modifier.wrapContentHeight(),
             language = language.value ?: Language.Russian.text,
             onLanguageChange = {
                 viewModel.changeLanguage(it)
@@ -66,25 +65,36 @@ fun GameScreen(
             is GameScreenState.Results ->
                 ResultScreen(result = (state.value as GameScreenState.Results).results)
             is GameScreenState.Loading ->
-                LoadingBlock()
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    LoadingBlock(modifier = Modifier)
+                }
             else -> {
-                AnswerGrid(state = answerGrid.value,
-                    onAnimationFinished = { viewModel.validateWord() })
+                Box(modifier = Modifier
+                    .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AnswerGrid(
+                        Modifier.fillMaxSize(),
+                        state = answerGrid.value,
+                        onAnimationFinished = { viewModel.validateWord() })
+                }
+                //Keyboard block
+                Box(modifier = Modifier.requiredHeight(200.dp),
+                    contentAlignment = Alignment.BottomCenter) {
+                    Keyboard(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter),
+                        isActive = state.value is GameScreenState.Loaded,
+                        layout = keyboardLayout.value!!,
+                        state = viewModel.keyboardState.value,
+                        onErase = { viewModel.eraseLetter() },
+                        onEnter = { viewModel.enterWord() },
+                        onLetterClick = { letter -> viewModel.appendLetter(letter) }
+                    )
+                }
             }
         }
 
-        //Keyboard block
-        Box(modifier = Modifier
-            .wrapContentHeight(),
-            contentAlignment = Alignment.BottomCenter) {
-            Keyboard(
-                isActive = state.value is GameScreenState.Loaded,
-                layout = keyboardLayout.value!!,
-                state = viewModel.keyboardState.value,
-                onErase = { viewModel.eraseLetter() },
-                onEnter = { viewModel.enterWord() },
-                onLetterClick = { letter -> viewModel.appendLetter(letter) }
-            )
-        }
+
     }
 }

@@ -5,11 +5,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,11 +30,13 @@ fun AnswerGrid(
 ) {
     Box(modifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 8.dp, vertical = 16.dp)
+        .padding(horizontal = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxSize()) {
             repeat(size.first) { x ->
-                Row(Modifier.fillMaxWidth()) {
+                Row(Modifier
+                    .fillMaxWidth()) {
                     repeat(size.second) { y ->
                         val cellState = state?.find { cell -> cell.x == x && cell.y == y }
                         AnswerCell(
