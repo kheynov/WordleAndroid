@@ -58,9 +58,10 @@ fun AnswerCell(
     LaunchedEffect(isRotateAnimated) {
         rotation.animateTo(if (isRotateAnimated) targetRotate else 0f,
             animationSpec = tween(1200, animationDelay))
+        if (targetRotate - rotation.value <= 10) {
+            onAnimationFinished()
+        }
     }
-
-    if (rotation.value == targetRotate) onAnimationFinished()
 
     Box(
         modifier = modifier

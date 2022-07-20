@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
@@ -41,6 +42,7 @@ fun KeyPad(
 ) {
     Box(
         modifier = modifier
+            .requiredHeight(54.dp)
             .clip(RoundedCornerShape(4.dp))
             .clickable {
                 when (key) {

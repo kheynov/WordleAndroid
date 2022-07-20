@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ fun Keyboard(
 ) {
     Box(modifier = Modifier
         .fillMaxWidth()
+        .requiredHeight(200.dp)
         .padding(4.dp)
     ) {
         Column(Modifier.fillMaxWidth()) {

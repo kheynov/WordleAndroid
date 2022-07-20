@@ -80,7 +80,7 @@ fun GameScreen(
                 layout = keyboardLayout.value!!,
                 state = viewModel.keyboardState.value,
                 onErase = { viewModel.eraseLetter() },
-                onEnter = { viewModel.checkWord() },
+                onEnter = { viewModel.enterWord() },
                 onLetterClick = { letter -> viewModel.appendLetter(letter) }
             )
         }

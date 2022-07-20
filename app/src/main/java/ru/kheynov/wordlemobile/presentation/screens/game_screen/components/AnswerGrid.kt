@@ -16,15 +16,18 @@ import ru.kheynov.wordlemobile.presentation.theme.WordleMobileTheme
 import ru.kheynov.wordlemobile.presentation.util.Cell
 import ru.kheynov.wordlemobile.presentation.util.LetterState
 
+private const val TAG = "AnswerGrid"
+
 @Composable
 fun AnswerGrid(
+    modifier: Modifier = Modifier,
     state: List<Cell>?,
     size: Pair<Int, Int> = Pair(6, 5),
     onAnimationFinished: () -> Unit = {},
 ) {
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 8.dp, vertical = 16.dp)
+        .padding(horizontal = 8.dp)
     ) {
         Column(Modifier.fillMaxWidth()) {
             repeat(size.first) { x ->
@@ -38,7 +41,11 @@ fun AnswerGrid(
                             state = cellState?.state ?: LetterState.NOT_USED,
                             letter = cellState?.letter ?: ' ',
                             animationDelay = y * 200,
-                            onAnimationFinished = onAnimationFinished
+                            onAnimationFinished = {
+                                if (y >= 4) {
+                                    onAnimationFinished()
+                                } else Unit
+                            }
                         )
                     }
                 }

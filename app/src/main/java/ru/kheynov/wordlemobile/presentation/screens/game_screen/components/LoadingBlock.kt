@@ -16,8 +16,10 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun LoadingBlock() {
-    Column(modifier = Modifier
+fun LoadingBlock(
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier
         .padding(16.dp)
         .fillMaxWidth()
         .wrapContentHeight(),

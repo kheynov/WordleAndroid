@@ -173,7 +173,7 @@ class GameScreenViewModel @Inject constructor(
         }
     }
 
-    fun checkWord() {
+    fun enterWord() {
         if (rowCounter < 5) return
         columnCounter++
         rowCounter = 0
@@ -183,6 +183,20 @@ class GameScreenViewModel @Inject constructor(
 
         updateKeyboardState()
 
+        Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
+        answerState.value = emptyList()
+        answerState.value = (_answerState.toList())
+        keyboardState.value = mapOf()
+        keyboardState.value = _keyboardState.toMap()
+
+        saveState(SavedState(
+            language = language.value.toString(),
+            cellState = _answerState,
+            keyboardState = _keyboardState
+        ))
+    }
+
+    fun validateWord() {
         val results = _answerState.fold(mutableListOf<LetterState>()) { acc, v ->
             (acc + v.state) as MutableList<LetterState>
         }.toList()
@@ -193,19 +207,11 @@ class GameScreenViewModel @Inject constructor(
                 language = this.language.value.toString(),
                 timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
                 word = (screenState.value as GameScreenState.Loaded).data?.word ?: "")
-            screenState.value = GameScreenState.Results(gameResult)
+            screenState.postValue(GameScreenState.Results(gameResult))
             Log.i(TAG, Json.encodeToString(gameResult))
             saveResults(gameResult)
             return
         }
-
-        Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
-        answerState.value = emptyList()
-        answerState.value = (_answerState.toList())
-        keyboardState.value = mapOf()
-        keyboardState.value = _keyboardState.toMap()
-
-
 
         if (columnCounter == 6) {
             Log.i(TAG, "checkWord: End reached")
@@ -217,16 +223,11 @@ class GameScreenViewModel @Inject constructor(
             )
             saveResults(gameResult)
 
-            screenState.value = GameScreenState.Results(gameResult)
+            screenState.postValue(GameScreenState.Results(gameResult))
 
             clearState()
 //            return
         }
-        saveState(SavedState(
-            language = language.value.toString(),
-            cellState = _answerState,
-            keyboardState = _keyboardState
-        ))
     }
 
     private fun updateKeyboardState() {
