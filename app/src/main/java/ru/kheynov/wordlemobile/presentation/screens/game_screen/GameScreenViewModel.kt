@@ -59,6 +59,7 @@ class GameScreenViewModel @Inject constructor(
         keyboardLayout.value = KeyboardLayout.Russian
         language.value = Language.Russian.text
         fetchSavedState()
+        updateStates()
 
         viewModelScope.launch {
             loadWord()
@@ -121,12 +122,13 @@ class GameScreenViewModel @Inject constructor(
 
                     response.body()?.word?.let {
                         if (repository.lastWord.isEmpty() || repository.lastWord.split(",").size == 1) {
+                            repository.saveWord(it, language.value.toString())
                             clearState()
                             return@let
                         }
                         if (
-                            repository.lastWord != it.split(",")[0] &&
-                            language.value.toString() == it.split(",")[1]
+                            repository.lastWord.split(",")[0] != it &&
+                            language.value.toString() == repository.lastWord.split(",")[1]
                         ) {
                             repository.saveWord(it, language.value.toString())
                             clearState()
@@ -165,7 +167,7 @@ class GameScreenViewModel @Inject constructor(
                         checkingState.value = WordCheckState.Correct
                         validateWord()
                     } else checkingState.value = WordCheckState.Incorrect
-                    delay(3000)
+                    delay(1000)
                     checkingState.value = WordCheckState.Idle
                 }
             } catch (e: Exception) {
@@ -220,7 +222,15 @@ class GameScreenViewModel @Inject constructor(
             }
             clearState()
             fetchSavedState()
+            updateStates()
         }
+    }
+
+    private fun updateStates() {
+        answerState.value = emptyList()
+        answerState.value = (_answerState.toList())
+        keyboardState.value = mapOf()
+        keyboardState.value = _keyboardState.toMap()
     }
 
     fun appendLetter(letter: Char) {
@@ -252,8 +262,8 @@ class GameScreenViewModel @Inject constructor(
     }
 
     fun enterWord() {
+        if (rowCounter < 5) return
         checkWord()
-
     }
 
     private fun validateWord() {
@@ -266,10 +276,7 @@ class GameScreenViewModel @Inject constructor(
         updateKeyboardState()
 
 //        Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
-        answerState.value = emptyList()
-        answerState.value = (_answerState.toList())
-        keyboardState.value = mapOf()
-        keyboardState.value = _keyboardState.toMap()
+        updateStates()
 
         saveState(SavedState(
             language = language.value.toString(),
@@ -296,7 +303,8 @@ class GameScreenViewModel @Inject constructor(
                 ) continue
             }
             if (
-                cell.state != LetterState.CORRECT && _keyboardState[cell.letter] == LetterState.CONTAINED
+                cell.state != LetterState.CORRECT && _keyboardState[cell.letter] == LetterState
+                    .CONTAINED
             ) continue
             _keyboardState[cell.letter] = cell.state
         }
@@ -309,6 +317,7 @@ class GameScreenViewModel @Inject constructor(
         answerState.value = _answerState.toList()
         columnCounter = 0
         rowCounter = 0
+        repository.clearState()
     }
 
     private fun saveResults(results: GameResult) {

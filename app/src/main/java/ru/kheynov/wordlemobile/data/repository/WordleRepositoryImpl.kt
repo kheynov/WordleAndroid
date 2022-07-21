@@ -30,6 +30,10 @@ class WordleRepositoryImpl @Inject constructor(
         prefStorage.state = state
     }
 
+    fun clearState() {
+        prefStorage.state = ""
+    }
+
     val lastWord: String
         get() = prefStorage.lastWord.toString()
 
