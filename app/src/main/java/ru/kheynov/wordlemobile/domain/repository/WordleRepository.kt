@@ -5,4 +5,6 @@ import ru.kheynov.wordlemobile.domain.entities.Word
 
 interface WordleRepository {
     suspend fun getWord(language: String): Response<Word>
+
+    suspend fun checkWord(language: String, word: String): Response<Void>
 }

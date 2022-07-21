@@ -4,4 +4,5 @@ sealed interface WordCheckState {
     object Checking : WordCheckState
     object Correct : WordCheckState
     object Incorrect : WordCheckState
+    object Idle : WordCheckState
 }

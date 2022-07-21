@@ -1,6 +1,7 @@
 package ru.kheynov.wordlemobile.presentation.screens.game_screen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +12,11 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +44,18 @@ fun GameScreen(
 
     val keyboardState = viewModel.keyboardState.observeAsState()
 
+    val checkState = viewModel.checkingState.observeAsState()
+
     Log.i(TAG, "GameScreen: RECOMPOSITION")
+
+    val context = LocalContext.current
+
+    LaunchedEffect(checkState.value) {
+        if (checkState.value == WordCheckState.Incorrect) {
+            Toast.makeText(context, "Этого слова нет в словаре, попробуйте другое!", Toast
+                .LENGTH_SHORT).show()
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Header(
@@ -50,8 +64,7 @@ fun GameScreen(
             onLanguageChange = {
                 viewModel.changeLanguage(it)
             },
-            isLoading = false/*state.value is GameScreenState.Loading*/ //TODO: loading if checking
-            // word
+            isLoading = checkState.value == WordCheckState.Checking
         )
         when (state.value) {
             is GameScreenState.Error -> Text(text = "Ошибка: ${
@@ -82,7 +95,7 @@ fun GameScreen(
                         item {
                             AnswerGrid(
                                 state = answerGrid.value,
-                                onAnimationFinished = { viewModel.validateWord() })
+                                onAnimationFinished = { viewModel.showResultsIfNeeded() })
                         }
                     }
                 }

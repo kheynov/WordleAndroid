@@ -10,4 +10,10 @@ interface WordleApi {
     suspend fun getWord(
         @Query("lang") language: String = "ru",
     ): Response<Word>
+
+    @GET("check")
+    suspend fun checkWord(
+        @Query("word") word: String,
+        @Query("lang") language: String,
+    ): Response<Void>
 }

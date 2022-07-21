@@ -42,6 +42,9 @@ class GameScreenViewModel @Inject constructor(
     var screenState = MutableLiveData<GameScreenState>()
         private set
 
+    var checkingState = MutableLiveData<WordCheckState>()
+        private set
+
     private var _keyboardState: MutableMap<Char, LetterState> = mutableMapOf()
 
     var keyboardState = MutableLiveData<Map<Char, LetterState>?>()
@@ -56,10 +59,18 @@ class GameScreenViewModel @Inject constructor(
         keyboardLayout.value = KeyboardLayout.Russian
         language.value = Language.Russian.text
         fetchSavedState()
+
         viewModelScope.launch {
             loadWord()
         }
 
+        checkingState.observeForever {
+            Log.i(TAG, "checkingState changed: $it")
+            if (it == WordCheckState.Correct) {
+                Log.i(TAG, "CORRECT: ")
+                validateWord()
+            }
+        }
     }
 
     private fun fetchSavedState() {
@@ -134,6 +145,68 @@ class GameScreenViewModel @Inject constructor(
         }
     }
 
+    private fun checkWord() {
+        viewModelScope.launch {
+            val word = _answerState.fold(mutableListOf<Char>()) { acc, v ->
+                (acc + v.letter) as MutableList<Char>
+            }.toList().takeLast(5).joinToString("")
+
+            checkingState.value = WordCheckState.Checking
+            try {
+                val response = repository.checkWord(
+                    language =
+                    if (language.value.isNullOrEmpty())
+                        Language.Russian.text
+                    else language.value!!,
+                    word = word
+                )
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        checkingState.value = WordCheckState.Correct
+                        validateWord()
+                    } else checkingState.value = WordCheckState.Incorrect
+                    delay(3000)
+                    checkingState.value = WordCheckState.Idle
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "checkWord error", e)
+            }
+        }
+    }
+
+    fun showResultsIfNeeded() {
+        val results = _answerState.fold(mutableListOf<LetterState>()) { acc, v ->
+            (acc + v.state) as MutableList<LetterState>
+        }.toList()
+        if (checkWordGuessed(results.takeLast(5))) {
+            val gameResult = GameResult(
+                cells = results,
+                language = this.language.value.toString(),
+                timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
+                word = (screenState.value as GameScreenState.Loaded).data?.word ?: "")
+            screenState.postValue(GameScreenState.Results(gameResult))
+//            Log.i(TAG, Json.encodeToString(gameResult))
+            saveResults(gameResult)
+            return
+        }
+
+        if (columnCounter == 6) {
+//            Log.i(TAG, "checkWord: End reached")
+            val gameResult = GameResult(
+                cells = results,
+                language = this.language.value.toString(),
+                timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
+                word = (screenState.value as GameScreenState.Loaded).data?.word ?: "",
+            )
+            saveResults(gameResult)
+
+            screenState.postValue(GameScreenState.Results(gameResult))
+
+            clearState()
+//            return
+        }
+    }
+
     fun changeLanguage(language: Language) {
         if (this.language.value != language.text) {
             repository.language = language.text
@@ -179,11 +252,15 @@ class GameScreenViewModel @Inject constructor(
     }
 
     fun enterWord() {
+        checkWord()
+
+    }
+
+    private fun validateWord() {
         if (rowCounter < 5) return
         columnCounter++
         rowCounter = 0
 //        Log.i(TAG, "State: ${screenState.value}")
-
         //TODO: Check word via API
 
         updateKeyboardState()
@@ -199,40 +276,6 @@ class GameScreenViewModel @Inject constructor(
             cellState = _answerState,
             keyboardState = _keyboardState
         ))
-    }
-
-    fun validateWord() {
-        val results = _answerState.fold(mutableListOf<LetterState>()) { acc, v ->
-            (acc + v.state) as MutableList<LetterState>
-        }.toList()
-
-        if (checkWordGuessed(results.takeLast(5))) {
-            val gameResult = GameResult(
-                cells = results,
-                language = this.language.value.toString(),
-                timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
-                word = (screenState.value as GameScreenState.Loaded).data?.word ?: "")
-            screenState.postValue(GameScreenState.Results(gameResult))
-//            Log.i(TAG, Json.encodeToString(gameResult))
-            saveResults(gameResult)
-            return
-        }
-
-        if (columnCounter == 6) {
-//            Log.i(TAG, "checkWord: End reached")
-            val gameResult = GameResult(
-                cells = results,
-                language = this.language.value.toString(),
-                timeToNext = (screenState.value as GameScreenState.Loaded).data?.next ?: 0,
-                word = (screenState.value as GameScreenState.Loaded).data?.word ?: "",
-            )
-            saveResults(gameResult)
-
-            screenState.postValue(GameScreenState.Results(gameResult))
-
-            clearState()
-//            return
-        }
     }
 
     private fun updateKeyboardState() {
