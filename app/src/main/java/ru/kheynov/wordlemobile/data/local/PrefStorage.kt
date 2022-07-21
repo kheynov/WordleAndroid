@@ -1,4 +1,4 @@
-package ru.kheynov.wordlemobile.data.api
+package ru.kheynov.wordlemobile.data.local
 
 import android.content.Context
 import android.content.SharedPreferences

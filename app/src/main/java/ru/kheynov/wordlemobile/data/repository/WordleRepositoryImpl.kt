@@ -1,7 +1,7 @@
 package ru.kheynov.wordlemobile.data.repository
 
 import retrofit2.Response
-import ru.kheynov.wordlemobile.data.api.PrefStorage
+import ru.kheynov.wordlemobile.data.local.PrefStorage
 import ru.kheynov.wordlemobile.data.api.WordleApi
 import ru.kheynov.wordlemobile.domain.entities.Word
 import ru.kheynov.wordlemobile.domain.repository.WordleRepository

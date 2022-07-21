@@ -106,9 +106,13 @@ class GameScreenViewModel @Inject constructor(
                     } catch (e: Exception) {
                         Log.e(TAG, e.stackTraceToString())
                     }
+                    val word = response.body()
+
                     response.body()?.word?.let {
-                            if (repository.lastWord.isEmpty() || repository.lastWord.split(",").size == 1)
+                        if (repository.lastWord.isEmpty() || repository.lastWord.split(",").size == 1) {
+                            clearState()
                             return@let
+                        }
                         if (
                             repository.lastWord != it.split(",")[0] &&
                             language.value.toString() == it.split(",")[1]
@@ -118,7 +122,7 @@ class GameScreenViewModel @Inject constructor(
                         }
                     }
 
-                    screenState.value = GameScreenState.Loaded(response.body())
+                    screenState.value = GameScreenState.Loaded(word)
 //                    Log.i(TAG, "loadWord: DATA, ${screenState.value.toString()}")
                     return@withContext
                 }
@@ -248,6 +252,9 @@ class GameScreenViewModel @Inject constructor(
                     _keyboardState[cell.letter] == LetterState.MISS
                 ) continue
             }
+            if (
+                cell.state != LetterState.CORRECT && _keyboardState[cell.letter] == LetterState.CONTAINED
+            ) continue
             _keyboardState[cell.letter] = cell.state
         }
     }
