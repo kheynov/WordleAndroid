@@ -328,7 +328,7 @@ class GameScreenViewModel @Inject constructor(
             currentResults =
                 Json.decodeFromString<List<GameResult>>(repository.results).toMutableList()
 //            Log.i(TAG, "saveResults: currentResults: $currentResults")
-            for (i in 0 until currentResults.size) {
+            for (i in 0 until currentResults.size - 1) {
                 if (currentResults[i].language == results.language) {
                     currentResults.removeAt(i)
                 }
