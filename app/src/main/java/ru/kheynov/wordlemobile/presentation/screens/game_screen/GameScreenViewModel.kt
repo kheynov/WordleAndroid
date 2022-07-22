@@ -124,6 +124,7 @@ class GameScreenViewModel @Inject constructor(
                         if (repository.lastWord.isEmpty() || repository.lastWord.split(",").size == 1) {
                             repository.saveWord(it, language.value.toString())
                             clearState()
+                            repository.clearState()
                             return@let
                         }
                         if (
@@ -132,6 +133,7 @@ class GameScreenViewModel @Inject constructor(
                         ) {
                             repository.saveWord(it, language.value.toString())
                             clearState()
+                            repository.clearState()
                         }
                     }
 
@@ -317,7 +319,6 @@ class GameScreenViewModel @Inject constructor(
         answerState.value = _answerState.toList()
         columnCounter = 0
         rowCounter = 0
-        repository.clearState()
     }
 
     private fun saveResults(results: GameResult) {
@@ -327,7 +328,7 @@ class GameScreenViewModel @Inject constructor(
             currentResults =
                 Json.decodeFromString<List<GameResult>>(repository.results).toMutableList()
 //            Log.i(TAG, "saveResults: currentResults: $currentResults")
-            for (i in 0 until currentResults.size - 1) {
+            for (i in 0 until currentResults.size) {
                 if (currentResults[i].language == results.language) {
                     currentResults.removeAt(i)
                 }
@@ -343,13 +344,14 @@ class GameScreenViewModel @Inject constructor(
         if (repository.state.isNotEmpty()) {
             currentState =
                 Json.decodeFromString<List<SavedState>>(repository.state).toMutableList()
-            for (i in 0 until currentState.size - 1) {
+            for (i in 0 until currentState.size) {
                 if (currentState[i].language == state.language) {
                     currentState.removeAt(i)
                 }
             }
         }
         currentState?.add(state)
+        val res = Json.encodeToString(currentState)
         repository.saveState(Json.encodeToString(currentState))
     }
 
