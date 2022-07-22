@@ -1,17 +1,17 @@
 package ru.kheynov.wordlemobile.data.api
 
 import retrofit2.Response
-import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import ru.kheynov.wordlemobile.domain.entities.Word
 
 interface WordleApi {
-    @GET("word")
+    @POST("get")
     suspend fun getWord(
         @Query("lang") language: String = "ru",
     ): Response<Word>
 
-    @GET("check")
+    @POST("check")
     suspend fun checkWord(
         @Query("word") word: String,
         @Query("lang") language: String,
