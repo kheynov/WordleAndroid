@@ -1,4 +1,4 @@
-package ru.kheynov.wordlemobile.presentation.screens.game_screen
+package ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders
 
 import kotlinx.serialization.Serializable
 import ru.kheynov.wordlemobile.domain.entities.Word

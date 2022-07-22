@@ -1,4 +1,4 @@
-package ru.kheynov.wordlemobile.presentation.screens.game_screen
+package ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders
 
 sealed interface WordCheckState {
     object Checking : WordCheckState

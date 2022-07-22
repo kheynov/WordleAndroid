@@ -13,6 +13,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.kheynov.wordlemobile.data.repository.WordleRepositoryImpl
+import ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders.GameScreenState
+import ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders.WordCheckState
 import ru.kheynov.wordlemobile.presentation.util.Cell
 import ru.kheynov.wordlemobile.presentation.util.GameResult
 import ru.kheynov.wordlemobile.presentation.util.KeyboardLayout
@@ -31,9 +33,7 @@ class GameScreenViewModel @Inject constructor(
 
     val keyboardLayout = MutableLiveData(KeyboardLayout.Russian)
 
-
     private var rowCounter = 0
-
 
     private var columnCounter = 0
 

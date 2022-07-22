@@ -25,6 +25,8 @@ import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Answe
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Header
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Keyboard
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.LoadingBlock
+import ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders.GameScreenState
+import ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders.WordCheckState
 import ru.kheynov.wordlemobile.presentation.screens.results_screen.ResultScreen
 import ru.kheynov.wordlemobile.presentation.util.Language
 
