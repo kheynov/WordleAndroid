@@ -291,13 +291,16 @@ class GameScreenViewModel @Inject constructor(
         val result = _answerState.checkWord(word = (screenState.value as GameScreenState.Loaded)
             .data?.word.toString())
 
-//        Log.i(TAG, "checkWord: answerState: ${_answerState.toList().hashCode()}")
         for (i in _answerState.indices) {
             if (i < _answerState.size - 5) continue
 
             val cell = _answerState[i]
             val state = result[i % 5]
             cell.state = state
+            if (cell.state == LetterState.CORRECT) {
+                _keyboardState[cell.letter] = cell.state
+                continue
+            }
             if (_keyboardState.containsKey(cell.letter)) {
                 if (
                     _keyboardState[cell.letter] == LetterState.CORRECT ||
