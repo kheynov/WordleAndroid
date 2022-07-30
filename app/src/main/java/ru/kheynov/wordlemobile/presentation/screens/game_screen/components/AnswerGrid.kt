@@ -17,8 +17,6 @@ import ru.kheynov.wordlemobile.presentation.theme.WordleMobileTheme
 import ru.kheynov.wordlemobile.presentation.util.Cell
 import ru.kheynov.wordlemobile.presentation.util.LetterState
 
-private const val TAG = "AnswerGrid"
-
 @Composable
 fun AnswerGrid(
     modifier: Modifier = Modifier,

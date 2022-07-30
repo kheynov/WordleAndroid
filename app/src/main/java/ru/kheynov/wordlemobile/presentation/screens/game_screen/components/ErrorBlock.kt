@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,17 +31,27 @@ fun ErrorBlock(
             state.error.contains("timeout")
 
     val errorText = if (isConnectionError) "Неустойчивое сетевое соединение, проверьте ваше " +
-            "подключение к интернету и попробуйте снова\n\nИнформация для разработчика:\n${state
-                .error}"
-    else "Произошла ошибка\n\nИнформация для разработчика: ${state.error}"
+            "подключение к интернету и попробуйте снова"
+    else "Произошла ошибка"
+
+    val errorInfo = "Информация для разработчика: ${state.error}"
 
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Image(painter = painterResource(id = if (isConnectionError) R.drawable.ic_no_connection else
             R.drawable.ic_error), contentDescription = null, contentScale = ContentScale.Fit)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = errorText, fontSize = 18.sp, textAlign = TextAlign.Center, modifier =
-        Modifier.padding(horizontal = 16.dp))
+        Text(text = errorText,
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
+        Text(
+            modifier = Modifier.padding(horizontal = 18.dp), text = errorInfo, fontSize = 16.sp,
+            textAlign =
+            TextAlign
+                .Center, color =
+        MaterialTheme.colors.onBackground.copy(alpha = 0.6f))
     }
 
 }

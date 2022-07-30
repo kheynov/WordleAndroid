@@ -14,8 +14,8 @@ android {
         applicationId = "ru.kheynov.worldemobile"
         minSdk = 21
         targetSdk = 32
-        versionCode = 10
-        versionName = "1.1.2"
+        versionCode = 12
+        versionName = "1.2.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -62,8 +62,8 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
-    implementation("androidx.activity:activity-compose:1.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    implementation("androidx.activity:activity-compose:1.5.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
@@ -77,14 +77,14 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")
-    implementation("androidx.compose.runtime:runtime-livedata:1.3.0-alpha01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.3.0-alpha02")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
     // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.1")
 
     // Hilt
     kapt("com.google.dagger:hilt-android-compiler:2.42")
