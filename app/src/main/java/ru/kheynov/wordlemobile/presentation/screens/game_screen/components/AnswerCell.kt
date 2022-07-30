@@ -30,8 +30,6 @@ import ru.kheynov.wordlemobile.presentation.theme.LightGridDividerColor
 import ru.kheynov.wordlemobile.presentation.theme.WordleMobileTheme
 import ru.kheynov.wordlemobile.presentation.util.LetterState
 
-private const val TAG = "AnswerCell"
-
 @Composable
 fun AnswerCell(
     modifier: Modifier = Modifier,
