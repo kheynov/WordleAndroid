@@ -5,23 +5,19 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.AnswerGrid
+import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.ErrorBlock
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Header
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Keyboard
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.LoadingBlock
@@ -69,17 +65,11 @@ fun GameScreen(
             isLoading = checkState.value == WordCheckState.Checking
         )
         when (state.value) {
-            is GameScreenState.Error -> Text(text = "Ошибка: ${
-                (state.value as GameScreenState
-                .Error).error
-            }",
-                textAlign = TextAlign.Center,
-                fontSize = 24.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(vertical = 16.dp)
-            )
+            is GameScreenState.Error -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    ErrorBlock(state = state.value as GameScreenState.Error)
+                }
+            }
             is GameScreenState.Results ->
                 ResultScreen(result = (state.value as GameScreenState.Results).results)
             is GameScreenState.Loading ->
