@@ -166,9 +166,16 @@ class GameScreenViewModel @Inject constructor(
                 )
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        checkingState.value = WordCheckState.Correct
-                        validateWord()
-                    } else checkingState.value = WordCheckState.Incorrect
+                        if (response.body()?.isCorrect == true) {
+                            checkingState.value = WordCheckState.Correct
+                            validateWord()
+                        } else {
+                            checkingState.value = WordCheckState.Incorrect
+                        }
+                    } else {
+                        Log.i(TAG, "checkWord: ${response.message()}")
+                        checkingState.value = WordCheckState.Incorrect
+                    }
                     delay(1000)
                     checkingState.value = WordCheckState.Idle
                 }
@@ -354,7 +361,6 @@ class GameScreenViewModel @Inject constructor(
             }
         }
         currentState?.add(state)
-        val res = Json.encodeToString(currentState)
         repository.saveState(Json.encodeToString(currentState))
     }
 

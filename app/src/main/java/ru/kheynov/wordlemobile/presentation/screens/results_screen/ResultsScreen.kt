@@ -82,7 +82,8 @@ fun ResultScreen(
         Row(Modifier.fillMaxWidth(0.6f),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween) {
-            val resultsText = "$enterText\n\n${getEmojis(result.cells)}\n\n#вордли"
+            val resultsText = "$enterText\n\n${getEmojis(result.cells)
+            }\n\n#вордли\nhttps://wordle.kheynov.ru/"
             Button(modifier = Modifier.weight(2f),
                 onClick = {
                     copyToClipboard(context,
