@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,7 +89,9 @@ fun ResultScreen(
                 onClick = {
                     copyToClipboard(context,
                         resultsText)
-                    Toast.makeText(context, "Скопировано в буфер обмена", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.copied), Toast
+                        .LENGTH_SHORT)
+                        .show()
                 }) {
                 Icon(painter = painterResource(id = R.drawable.ic_baseline_content_copy_24),
                     contentDescription = "")
@@ -107,14 +110,14 @@ fun ResultScreen(
                         imageVector = Icons.Default.Share,
                         contentDescription
                         = "")
-                    Text(text = "Поделиться")
+                    Text(text = stringResource(R.string.share_button))
                 }
             }
         }
 
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
-            text = "Следующее слово через:\n${timeRemaining.value}",
+            text = stringResource(id = R.string.next_word_time) + timeRemaining.value,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
         )

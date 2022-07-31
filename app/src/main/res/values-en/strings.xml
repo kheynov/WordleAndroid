@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Wordle</string>
     <string name="information_for_developer">Information for developer</string>
     <string name="loading_text">Loading word of the day…</string>
     <string name="no_connection_message">Unstable network connection, check your internet connection and try again</string>
@@ -10,4 +10,3 @@
     <string name="next_word_time">Next word in:</string>
     <string name="word_not_exist">This word is not in the dictionary, try another!</string>
 </resources>
-

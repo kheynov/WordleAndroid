@@ -5,17 +5,23 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import ru.kheynov.wordlemobile.R
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.AnswerGrid
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.ErrorBlock
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Header
@@ -50,7 +56,7 @@ fun GameScreen(
 
     LaunchedEffect(checkState.value) {
         if (checkState.value == WordCheckState.Incorrect) {
-            Toast.makeText(context, "Этого слова нет в словаре, попробуйте другое!", Toast
+            Toast.makeText(context, context.getString(R.string.word_not_exist), Toast
                 .LENGTH_SHORT).show()
         }
     }
@@ -66,8 +72,22 @@ fun GameScreen(
         )
         when (state.value) {
             is GameScreenState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    ErrorBlock(state = state.value as GameScreenState.Error)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        ErrorBlock(state = state.value as GameScreenState.Error)
+                    }
+                    Box(modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.BottomCenter) {
+                        Button(
+                            onClick = { viewModel.updateWord() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 8.dp),
+                        ) {
+                            Text(text = stringResource(R.string.retry_button).uppercase())
+                        }
+                    }
                 }
             }
             is GameScreenState.Results ->

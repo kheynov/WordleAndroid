@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="retry_button">Повторить</string>
+    <string name="word_not_exist">Этого слова нет в словаре, попробуйте другое!</string>
+    <string name="copied">Скопировано в буфер обмена</string>
+    <string name="share_button">Поделиться</string>
+    <string name="next_word_time">Следующее слово через:\n</string>
+    <string name="no_connection_message">Неустойчивое сетевое соединение, проверьте ваше подключение к интернету и попробуйте снова</string>
+    <string name="unknown_error">Произошла ошибка</string>
+    <string name="information_for_developer">"Информация для разработчика: "</string>
+    <string name="loading_text">Загружаем слово дня…</string>
+</resources>

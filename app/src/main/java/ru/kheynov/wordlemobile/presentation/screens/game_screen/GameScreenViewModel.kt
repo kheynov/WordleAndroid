@@ -55,6 +55,12 @@ class GameScreenViewModel @Inject constructor(
     var answerState = MutableLiveData<List<Cell>>()
         private set
 
+    fun updateWord() {
+        viewModelScope.launch {
+            loadWord()
+        }
+    }
+
     init {
         keyboardLayout.value = KeyboardLayout.Russian
         language.value = Language.Russian.text

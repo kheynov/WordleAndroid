@@ -11,8 +11,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.kheynov.wordlemobile.R
 
 
 @Composable
@@ -32,6 +34,6 @@ fun LoadingBlock(
             color = MaterialTheme.colors.onBackground
         )
 
-        Text(text = "Загружаем слово дня...", fontSize = 24.sp)
+        Text(text = stringResource(R.string.loading_text), fontSize = 24.sp)
     }
 }
