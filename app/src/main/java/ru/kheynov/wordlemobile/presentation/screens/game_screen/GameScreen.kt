@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.kheynov.wordlemobile.R
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.AnswerGrid
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.ErrorBlock
-import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Header
+import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.header.Header
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.Keyboard
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.components.LoadingBlock
 import ru.kheynov.wordlemobile.presentation.screens.game_screen.state_holders.GameScreenState
@@ -63,7 +63,7 @@ fun GameScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         Header(
-            modifier = Modifier.wrapContentHeight(),
+            modifier = Modifier.wrapContentHeight().padding(bottom = 8.dp),
             language = language.value ?: Language.Russian.text,
             onLanguageChange = {
                 viewModel.changeLanguage(it)
