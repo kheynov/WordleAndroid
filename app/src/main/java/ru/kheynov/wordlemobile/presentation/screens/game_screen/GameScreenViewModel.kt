@@ -338,13 +338,11 @@ class GameScreenViewModel @Inject constructor(
     }
 
     private fun saveResults(results: GameResult) {
-//        Log.i(TAG, "saveResults/repository: ${repository.results}")
         var currentResults: MutableList<GameResult>? = emptyList<GameResult>().toMutableList()
         if (repository.results.isNotEmpty()) {
             currentResults =
                 Json.decodeFromString<List<GameResult>>(repository.results).toMutableList()
-//            Log.i(TAG, "saveResults: currentResults: $currentResults")
-            for (i in 0 until currentResults.size - 1) {
+            for (i in 0 until currentResults.size) {
                 if (currentResults[i].language == results.language) {
                     currentResults.removeAt(i)
                 }
@@ -355,7 +353,6 @@ class GameScreenViewModel @Inject constructor(
     }
 
     private fun saveState(state: SavedState) {
-//        Log.i(TAG, "repository.state: ${repository.state}")
         var currentState: MutableList<SavedState>? = emptyList<SavedState>().toMutableList()
         if (repository.state.isNotEmpty()) {
             currentState =
