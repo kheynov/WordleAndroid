@@ -110,7 +110,10 @@ fun KeyboardPreview() {
             Keyboard(state = mapOf(
                 'ы' to LetterState.CORRECT,
                 'а' to LetterState.CONTAINED,
-                'л' to LetterState.MISS
+                'л' to LetterState.MISS,
+                'р' to LetterState.CONTAINED,
+                'щ' to LetterState.MISS,
+                'ш' to LetterState.MISS,
             ))
         }
     }

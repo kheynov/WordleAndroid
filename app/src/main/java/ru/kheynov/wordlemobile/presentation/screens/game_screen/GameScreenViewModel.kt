@@ -342,11 +342,14 @@ class GameScreenViewModel @Inject constructor(
         if (repository.results.isNotEmpty()) {
             currentResults =
                 Json.decodeFromString<List<GameResult>>(repository.results).toMutableList()
-            for (i in 0 until currentResults.size) {
-                if (currentResults[i].language == results.language) {
-                    currentResults.removeAt(i)
+
+            val tmp = mutableListOf<GameResult>()
+            for (i in currentResults.indices) {
+                if (currentResults[i].language != results.language) {
+                    tmp.add(currentResults[i])
                 }
             }
+            currentResults = tmp
         }
         currentResults?.add(results)
         repository.saveResults(Json.encodeToString(currentResults))
@@ -357,11 +360,13 @@ class GameScreenViewModel @Inject constructor(
         if (repository.state.isNotEmpty()) {
             currentState =
                 Json.decodeFromString<List<SavedState>>(repository.state).toMutableList()
-            for (i in 0 until currentState.size) {
-                if (currentState[i].language == state.language) {
-                    currentState.removeAt(i)
+            val tmp = mutableListOf<SavedState>()
+            for (i in currentState.indices) {
+                if (currentState[i].language != state.language) {
+                    tmp.add(currentState[i])
                 }
             }
+            currentState = tmp
         }
         currentState?.add(state)
         repository.saveState(Json.encodeToString(currentState))
